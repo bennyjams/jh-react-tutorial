@@ -10,11 +10,14 @@ padding: 0.2rem;
 `;
 
 export function PokemonFilter() {
-    const {filter, setFilter} = useContext(PokemonContext)
+    const {state: {filter}, dispatch} = useContext(PokemonContext)
     return (
         <Input 
             value={filter}
-            onChange={(evt) => setFilter(evt.target.value)}
+            onChange={(evt) => dispatch({
+                type: "SET_FILTER",
+                payload: evt.target.value,
+            })}
         />
     )
 }

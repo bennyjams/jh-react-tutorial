@@ -2,9 +2,7 @@
 import React from 'react';
 import PropTypes from "prop-types"
 import styled from '@emotion/styled';
-
 import { Button, CssBaseline } from '@mui/material';
-
 import './App.css';
 
 import PokemonType from './elements/PokemonType';
@@ -12,7 +10,30 @@ import PokemonRow from './elements/PokemonRow';
 import PokemonInfo from './elements/PokemonInfo';
 import { PokemonFilter } from './elements/PokemonFilter';
 import { PokemonTable } from './elements/PokemonTable';
+
 import PokemonContext from './PokemonContext';
+
+const pokemonReducer = (state, action) => {
+  switch(action.type) {
+    case 'SET_FILTER':
+      return {
+        ...state,
+        filter: action.payload,
+      };
+    case 'SET_POKEMON':
+      return {
+        ...state,
+        pokemon: action.payload,
+      };
+    case 'SET_SELECTED_POKEMON':
+      return {
+        ...state,
+        selectedItem: action.payload,
+      };
+    default:
+      throw new Error("No action");
+  }
+}
 
 
 const Title = styled.h1`
@@ -36,26 +57,35 @@ const Input = styled.input`
 `;
 
 function App() {
-  const [filter, setFilter] = React.useState("");
-  const [pokemon, setPokemon] = React.useState([]);
-  const [selectedItem, setSelectedItem] = React.useState(null);
+  
+  const [state, dispatch] = React.useReducer(pokemonReducer, {
+    pokemon: [],
+    filter: "",
+    selectedItem: null,
+  })
   
   React.useEffect(() => {
     fetch("http://localhost:3000/jh-react-tutorial/pokemon.json")
       .then(resp => resp.json())
-      .then(data => setPokemon(data))
-      .catch(err => console.error(err))
+      .then(data => 
+        dispatch({
+          type: 'SET_POKEMON',
+          payload: data,
+        }))
+      //.catch(err => console.error(err))
   }, [])
+  
+  
+  
+  if(!state.pokemon){
+    return <div>Loading data...</div>
+  }
   
   return (
     <PokemonContext.Provider
       value={{
-        filter,
-        pokemon,
-        selectedItem,
-        setFilter,
-        setPokemon,
-        setSelectedItem,
+        state,
+        dispatch,
       }}
     >
       <Container>

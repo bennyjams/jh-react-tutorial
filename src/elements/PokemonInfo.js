@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import PokemonContext from '../PokemonContext';
 
 const PokemonInfo = () => {
-    const {selectedItem, }
+    const {state: {selectedItem} }
         = useContext(PokemonContext)
 
     

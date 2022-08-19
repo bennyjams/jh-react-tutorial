@@ -84,77 +84,49 @@ const Input = styled.input`
   padding: 0.2rem;
 `;
 
-class App extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      filter: "",
-      pokemon: [],
-      selectedItem: null,
-      
-    }
-  }
+function App() {
+  const [filter, setFilter] = React.useState("");
+  const [pokemon, setPokemon] = React.useState([]);
+  const [selectedItem, setSelectedItem] = React.useState(null);
   
-  componentDidMount(){
-    fetch("http://localhost:3000/jh-react-tutorial/pokemon.json")
-        .then(resp => resp.json())
-        .then(pokemon => this.setState({
-          ...this.state,
-          pokemon,
-        }))
-        .catch(err => console.error(err))
-  }
-  
-  render(){
-    return (
-      <Container>
-        <Title>Pokemon Search</Title>
-        <TwoColumnLayout>
-          <div>
-            <Input value={this.state.filter}
-              onChange={(evt) => this.setState({
-                ...this.state,
-                filter: evt.target.value
-              })}
-            />
-            <table width="100%">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.pokemon.filter((pokemon) => 
-                  pokemon.name.english.toLowerCase()
-                    .includes(this.state.filter.toLowerCase())
-                )
-                .slice(0,50).map((pokemon) => (
-                  <PokemonRow key={pokemon.id} pokemon={pokemon}
-                    onSelect={(pokemon) => this.setState({
-                      ...this.state,
-                      selectedItem: pokemon
-                    })} />
-                ))}
-                
-              </tbody>
-            </table>
-          </div>
-          {this.state.selectedItem && <PokemonInfo {...this.state.selectedItem} />}
-        </TwoColumnLayout>
-        
-      </Container>
-    );
-  }
-  
-}
-
-/*React.useEffect(() => {
+  React.useEffect(() => {
     fetch("http://localhost:3000/jh-react-tutorial/pokemon.json")
       .then(resp => resp.json())
       .then(data => setPokemon(data))
       .catch(err => console.error(err))
   }, [])
-  */
+  
+  return (
+    <Container>
+      <Title>Pokemon Search</Title>
+      <TwoColumnLayout>
+        <div>
+          <Input/>
+          <table width="100%">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pokemon.filter((pokemon) => 
+                pokemon.name.english.toLowerCase()
+                  .includes(filter.toLowerCase())
+              )
+              .slice(0,50).map((pokemon) => (
+                <PokemonRow key={pokemon.id} pokemon={pokemon}
+                  onSelect={setSelectedItem} />
+              ))}
+              
+            </tbody>
+          </table>
+        </div>
+        {selectedItem && <PokemonInfo {...selectedItem} />}
+      </TwoColumnLayout>
+      
+    </Container>
+  );
+}
 
 export default App;

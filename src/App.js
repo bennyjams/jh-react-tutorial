@@ -1,6 +1,8 @@
 
 import React from 'react';
 import PropTypes from "prop-types"
+import styled from '@emotion/styled';
+
 
 import './App.css';
 
@@ -55,6 +57,26 @@ PokemonInfo.propTypes = {
 }
 
 
+const Title = styled.h1`
+  text-align: center;
+`;
+const TwoColumnLayout = styled.div`
+  display: grid;
+  grid-template-columns: 70% 30%;
+  column-gap: 1rem;
+`;
+const Container = styled.div`
+  margin: auto;
+  width: 800px;
+  padding-top: 1rem;
+  background: lightblue;
+`;
+const Input = styled.input`
+  width: 100%;
+  font-size: x-large;
+  padding: 0.2rem;
+`;
+
 function App() {
   const [filter, setFilter] = React.useState("");
   const [pokemon, setPokemon] = React.useState([]);
@@ -68,22 +90,11 @@ function App() {
   }, [])
   
   return (
-    <div
-      style={{
-        margin: "auto",
-        width: 800,
-        paddingTop: "1rem",
-        background: "lightblue",
-      }}
-    >
-      <h1 className='title'>Pokemon Search</h1>
-      
-      <div className='searchGrid'>
+    <Container>
+      <Title>Pokemon Search</Title>
+      <TwoColumnLayout>
         <div>
-          <input
-            value={filter}
-            onChange={ (evt) => setFilter(evt.target.value)}
-          />
+          <Input/>
           <table width="100%">
             <thead>
               <tr>
@@ -105,9 +116,9 @@ function App() {
           </table>
         </div>
         {selectedItem && <PokemonInfo {...selectedItem} />}
-      </div>
+      </TwoColumnLayout>
       
-    </div>
+    </Container>
   );
 }
 

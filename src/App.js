@@ -7,61 +7,12 @@ import { Button, CssBaseline } from '@mui/material';
 
 import './App.css';
 
-const PokemonRow = ({pokemon, onSelect}) => (
-  <tr onClick={() => onSelect(pokemon)}>
-    <td>{pokemon.name.english}</td>
-    <td>{pokemon.type.join(", ")}</td>
-    <td><Button 
-          variant='contained' color='primary'
-          onClick={() => {
-            onSelect(pokemon)
-          }}>Select!</Button>
-    </td>
-  </tr>
-);
-
-PokemonRow.propTypes = {
-  pokemon: PropTypes.shape({
-    name: PropTypes.shape({
-      english: PropTypes.string
-    }),
-    type: PropTypes.arrayOf(PropTypes.string.isRequired),
-  }),
-  onSelect: PropTypes.func.isRequired,  
-}
-
-const PokemonInfo = ({name, base}) => (
-  <div>
-    <h1>{name.english}</h1>
-    <table>
-      <tbody>
-        {
-          Object.keys(base).map(key => (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{base[key]}</td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
-  </div>
-)
-
-PokemonInfo.propTypes = {
-  name: PropTypes.shape({
-    english: PropTypes.string
-  }),
-  base: PropTypes.shape({
-    HP: PropTypes.number.isRequired,
-    Attack: PropTypes.number.isRequired,
-    Defense: PropTypes.number.isRequired,
-    "Sp. Attack": PropTypes.number.isRequired,
-    "Sp. Defense": PropTypes.number.isRequired,
-    Speed: PropTypes.number.isRequired,
-  }),
-  
-}
+import PokemonType from './elements/PokemonType';
+import PokemonRow from './elements/PokemonRow';
+import PokemonInfo from './elements/PokemonInfo';
+import { PokemonFilter } from './elements/PokemonFilter';
+import { PokemonTable } from './elements/PokemonTable';
+import PokemonContext from './PokemonContext';
 
 
 const Title = styled.h1`
@@ -97,35 +48,28 @@ function App() {
   }, [])
   
   return (
-    <Container>
-      <Title>Pokemon Search</Title>
-      <TwoColumnLayout>
-        <div>
-          <Input/>
-          <table width="100%">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pokemon.filter((pokemon) => 
-                pokemon.name.english.toLowerCase()
-                  .includes(filter.toLowerCase())
-              )
-              .slice(0,50).map((pokemon) => (
-                <PokemonRow key={pokemon.id} pokemon={pokemon}
-                  onSelect={setSelectedItem} />
-              ))}
-              
-            </tbody>
-          </table>
-        </div>
-        {selectedItem && <PokemonInfo {...selectedItem} />}
-      </TwoColumnLayout>
-      
-    </Container>
+    <PokemonContext.Provider
+      value={{
+        filter,
+        pokemon,
+        selectedItem,
+        setFilter,
+        setPokemon,
+        setSelectedItem,
+      }}
+    >
+      <Container>
+        <Title>Pokemon Search</Title>
+        <TwoColumnLayout>
+          <div>
+            <PokemonFilter />
+            <PokemonTable />
+          </div>
+          <PokemonInfo />
+        </TwoColumnLayout>
+        
+      </Container>
+    </PokemonContext.Provider>
   );
 }
 

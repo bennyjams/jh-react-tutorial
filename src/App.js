@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from "prop-types"
 import styled from '@emotion/styled';
 
+import { Button, CssBaseline } from '@mui/material';
 
 import './App.css';
 
@@ -10,6 +11,12 @@ const PokemonRow = ({pokemon, onSelect}) => (
   <tr onClick={() => onSelect(pokemon)}>
     <td>{pokemon.name.english}</td>
     <td>{pokemon.type.join(", ")}</td>
+    <td><Button 
+          variant='contained' color='primary'
+          onClick={() => {
+            onSelect(pokemon)
+          }}>Select!</Button>
+    </td>
   </tr>
 );
 
@@ -83,7 +90,7 @@ function App() {
   const [selectedItem, setSelectedItem] = React.useState(null);
   
   React.useEffect(() => {
-    fetch("http://localhost:3001/jh-react-tutorial/pokemon.json")
+    fetch("http://localhost:3000/jh-react-tutorial/pokemon.json")
       .then(resp => resp.json())
       .then(data => setPokemon(data))
       .catch(err => console.error(err))

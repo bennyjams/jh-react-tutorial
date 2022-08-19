@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from "prop-types"
 
 import './App.css';
-import pokemon from "./pokemon.json"
 
 const PokemonRow = ({pokemon, onSelect}) => (
   <tr onClick={() => onSelect(pokemon)}>
@@ -58,7 +57,15 @@ PokemonInfo.propTypes = {
 
 function App() {
   const [filter, setFilter] = React.useState("");
+  const [pokemon, setPokemon] = React.useState([]);
   const [selectedItem, setSelectedItem] = React.useState(null);
+  
+  React.useEffect(() => {
+    fetch("http://localhost:3001/jh-react-tutorial/pokemon.json")
+      .then(resp => resp.json())
+      .then(data => setPokemon(data))
+      .catch(err => console.error(err))
+  }, [])
   
   return (
     <div

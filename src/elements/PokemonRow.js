@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import PropTypes from "prop-types"
 
 import PokemonType from './PokemonType';
+import { useSelector, useDispatch } from 'react-redux';
 
 const PokemonRow = ({pokemon, onSelect}) => (
   <tr onClick={() => onSelect(pokemon)}>

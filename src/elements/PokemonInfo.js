@@ -2,12 +2,11 @@
 import React, {useContext} from 'react';
 import PropTypes from "prop-types"
 import PokemonContext from '../PokemonContext';
+import { useSelector, useDispatch } from 'react-redux';
 
 const PokemonInfo = () => {
-    const {state: {selectedItem} }
-        = useContext(PokemonContext)
-
-    
+  
+  const selectedItem = useSelector(state => state.selectedItem)
         
   return selectedItem ? (
   <div>

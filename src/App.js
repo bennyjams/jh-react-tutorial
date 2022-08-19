@@ -3,6 +3,9 @@ import React from 'react';
 import PropTypes from "prop-types"
 import styled from '@emotion/styled';
 import { Button, CssBaseline } from '@mui/material';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider, useSelector, useDispatch } from 'react-redux';
+
 import './App.css';
 
 import PokemonType from './elements/PokemonType';
@@ -11,9 +14,13 @@ import PokemonInfo from './elements/PokemonInfo';
 import { PokemonFilter } from './elements/PokemonFilter';
 import { PokemonTable } from './elements/PokemonTable';
 
-import PokemonContext from './PokemonContext';
+//import PokemonContext from './PokemonContext';
 
-const pokemonReducer = (state, action) => {
+const pokemonReducer = (state ={
+  pokemon: [],
+  filter: "",
+  selectedItem: null,
+}, action) => {
   switch(action.type) {
     case 'SET_FILTER':
       return {
@@ -31,10 +38,11 @@ const pokemonReducer = (state, action) => {
         selectedItem: action.payload,
       };
     default:
-      throw new Error("No action");
+      return state;
   }
 }
 
+const store = configureStore({reducer: pokemonReducer});
 
 const Title = styled.h1`
   text-align: center;
@@ -58,11 +66,8 @@ const Input = styled.input`
 
 function App() {
   
-  const [state, dispatch] = React.useReducer(pokemonReducer, {
-    pokemon: [],
-    filter: "",
-    selectedItem: null,
-  })
+  const dispatch = useDispatch()
+  const pokemon = useSelector(state => state.pokemon)
   
   React.useEffect(() => {
     fetch("http://localhost:3000/jh-react-tutorial/pokemon.json")
@@ -77,17 +82,12 @@ function App() {
   
   
   
-  if(!state.pokemon){
+  if(!pokemon){
     return <div>Loading data...</div>
   }
   
   return (
-    <PokemonContext.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-    >
+    
       <Container>
         <Title>Pokemon Search</Title>
         <TwoColumnLayout>
@@ -99,8 +99,8 @@ function App() {
         </TwoColumnLayout>
         
       </Container>
-    </PokemonContext.Provider>
+    
   );
 }
 
-export default App;
+export default () => <Provider store={store}><App /></Provider>;
